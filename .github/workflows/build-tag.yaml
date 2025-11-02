@@ -20,22 +20,22 @@ jobs:
             runs-on: ubuntu-24.04
             additional-cmake-flags: "-D GGML_F16C=OFF -D GGML_FMA=OFF -D GGML_BMI2=OFF -D GGML_AVX2=OFF"
 
-          - name: amd64-avx2
-            runs-on: ubuntu-24.04
-            # additional-cmake-flags: ""
+          # - name: amd64-avx2
+          #   runs-on: ubuntu-24.04
+          #   # additional-cmake-flags: ""
 
-          - name: amd64-avx512
-            runs-on: ubuntu-24.04
-            additional-cmake-flags: "-DGGML_AVX512=ON"
+          # - name: amd64-avx512
+          #   runs-on: ubuntu-24.04
+          #   additional-cmake-flags: "-D GGML_AVX512=ON"
 
-          - name: amd64-cuda
-            runs-on: ubuntu-24.04
-            additional-cmake-flags: "-D GGML_CUDA=ON -D CMAKE_CUDA_ARCHITECTURES=all-major"
-            apt-dependencies: "nvidia-cuda-toolkit"
+          # - name: amd64-cuda
+          #   runs-on: ubuntu-24.04
+          #   additional-cmake-flags: "-D GGML_CUDA=ON -D CMAKE_CUDA_ARCHITECTURES=all-major"
+          #   apt-dependencies: "nvidia-cuda-toolkit"
 
-          - name: arm-neon
-            runs-on: ubuntu-24.04-arm
-            # additional-cmake-flags: ""
+          # - name: arm-neon
+          #   runs-on: ubuntu-24.04-arm
+          #   # additional-cmake-flags: ""
 
     runs-on: ${{ matrix.jobs.runs-on }}
     steps:
@@ -58,8 +58,22 @@ jobs:
 
       - name: Pack artifacts
         run: |
-          cp LICENSE ./build/bin/
-          zip -r llamacpp-${{ github.event.release.tag_name }}-${{ matrix.jobs.name }}.zip ./build/bin/*
+          # Prepare archive directory:
+          # - bin for executables
+          # - lib for shared libraries
+          # - LICENSE file
+          # - licenses directory
+
+          mkdir -p archive/lib
+          ls
+          tree build
+          mv build/bin/*.so archive/lib/
+          mv build/bin archive/
+          cp LICENSE archive/
+          cp -r licenses archive/
+
+          cd archive
+          zip -r ../llamacpp-${{ github.event.release.tag_name }}-${{ matrix.jobs.name }}.zip 
 
       - name: Upload artifact to release
         uses: softprops/action-gh-release@v2
