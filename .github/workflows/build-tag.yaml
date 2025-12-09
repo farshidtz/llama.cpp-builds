@@ -105,6 +105,7 @@ jobs:
           # Workaround: llama.cpp expects ggml shared objects in the same directory as executables
           pushd archive/bin/
           ln -s ../lib/libggml-cpu* ./
+          ln -s ../lib/libggml-cuda* ./
           popd
           
           # Copy CUDA runtime libraries if built with CUDA
