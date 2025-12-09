@@ -103,6 +103,7 @@ jobs:
           cp LICENSE archive/licenses/
           
           # Workaround: llama.cpp expects ggml shared objects in the same directory as executables
+          # See issue: https://github.com/ggml-org/llama.cpp/issues/17491
           pushd archive/bin/
           ln -s ../lib/libggml-cpu* ./
           ln -s ../lib/libggml-cuda* ./
