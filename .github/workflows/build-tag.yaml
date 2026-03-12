@@ -10,7 +10,8 @@ jobs:
       contents: write # for uploading release assets
     
     env:
-      SOURCE_TAG: ${{ github.event.release.tag_name }}
+      # SOURCE_TAG: ${{ github.event.release.tag_name }} # temporary bypass 
+      SOURCE_TAG: 557fe2d9132913eaf08c8abf21b0cff61addb9ac
       ARTIFACT: "llamacpp-${{ matrix.jobs.name }}.tar.gz"
 
     strategy:
